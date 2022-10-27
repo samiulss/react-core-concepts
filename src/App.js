@@ -1,46 +1,65 @@
 // import logo from './logo.svg';
+import { useEffect, useState } from 'react';
 import './App.css';
 
 function App() {
-  const listProduct = [
-    {name:'Apple', price:'200 Taka KG'},
-    {name:'Mango', price:'150 Taka KG'},
-    {name:'Orange', price:'250 Taka KG'},
-    {name:'Banana', price:'20 Taka Hali'},
+  const products = [
+    {name:'Apple', price:'200$'},
+    {name:'Mango', price:'150$'},
+    {name:'Banana', price:'50$'},
+    {name:'Orange', price:'250$'},
   ]
   return (
     <div className="App">
       <header className="App-header">
-        <Products listProduct = {listProduct[0]}></Products>
-        <Products listProduct = {listProduct[1]}></Products>
-        <Products listProduct = {listProduct[2]}></Products>
-        <Products listProduct = {listProduct[3]}></Products>
+        <Count></Count>
+        <Users></Users>
+        {
+          products.map(pd => <Product product={pd}></Product>)
+        }
       </header>
     </div>
   );
 }
-function Products(props) {
-  const style = {
-    border:'1px solid lime',
-    padding:'10px',
-    width:'200px',
-    height:'200px',
-    borderRadius: '8px',
-    marginBottom:'10px',
-    float:'left',
-    marginRight:'9px',
-    background:'tomato'
-  }
-  const {name, price} = props.listProduct;
-  return (
-    <div style={style}>
-      <h4>{name}</h4>
-      <h5>{price}</h5>
-      <button id='btn' style={{
-        bacKGround:'skyblue',
-        borderRadius:'5px',
-        padding:'5px'
-        }}>Buy now</button>
+
+function Count(props){
+  const [count, setcount] = useState(0);
+  return(
+    <div>
+      <h2>Like: {count}</h2>
+      <button onClick={() => setcount(count + 1)}>Like</button>
+      <button onClick={() => setcount(count - 1)}>Dislike</button>
+    </div>
+  )
+}
+
+function Users(){
+  const [user, setUser] = useState([]);
+  useEffect(() => {
+    fetch('https://jsonplaceholder.typicode.com/users/')
+    .then(res => res.json())
+    .then(data => setUser(data))
+  })
+  return(
+    <div>
+      <h3>Dynamic users: {user.length}</h3>
+      <ul>
+        {
+          user.map(users => <li>{users.name}</li>)
+        }
+      </ul>
+    </div>
+  )
+}
+
+function Product(props){
+  const {name, price} = props.product;
+  const handler = () => console.log('clicked');
+  return(
+    <div className='component'>
+      <h2>{name}</h2>
+      <h3>{price}</h3>
+      <button onClick={handler}>Buy now</button>
     </div>
   )
 }
